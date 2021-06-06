@@ -25,7 +25,7 @@ sudo apt install -y rabbitvcs-core rabbitvcs-nemo
 터미널을 열고(Ctrl+Alt+T) 아래 명령어를 입력하세요.
 
 ```
-curl -sL https://pkg.hamonikr.org/add-hamonikr.apt | sudo -E bash -
+wget -qO- https://pkg.hamonikr.org/add-hamonikr.apt | sudo -E bash -
 
 # nemo 
 sudo apt install -y rabbitvcs-core rabbitvcs-nemo
