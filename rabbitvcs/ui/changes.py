@@ -39,7 +39,12 @@ from rabbitvcs.util.strings import S
 import rabbitvcs.ui.action
 from rabbitvcs.ui.dialog import MessageBox
 
-from rabbitvcs import gettext
+import locale
+import gettext
+from rabbitvcs import APP_NAME, LOCALE_DIR
+locale.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.textdomain(APP_NAME)
 _ = gettext.gettext
 
 class Changes(InterfaceView):
@@ -135,9 +140,8 @@ class Changes(InterfaceView):
         for tup in indexes:
             self.selected_rows.append(tup[0])
 
-        if not event is None:
-            if event.button == 3 and event.type == Gdk.EventType.BUTTON_RELEASE:
-                self.show_changes_table_popup_menu(treeview, event)
+        if event.button == 3 and event.type == Gdk.EventType.BUTTON_RELEASE:
+            self.show_changes_table_popup_menu(treeview, event)
 
     def on_more_actions_changed(self, widget, data=None):
         index = self.more_actions.get_active()

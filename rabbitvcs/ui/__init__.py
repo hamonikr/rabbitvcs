@@ -38,7 +38,12 @@ sa = helper.SanitizeArgv()
 from gi.repository import Gtk, Gdk, GLib
 sa.restore()
 
-from rabbitvcs import APP_NAME, LOCALE_DIR, gettext
+import locale
+import gettext
+from rabbitvcs import APP_NAME, LOCALE_DIR
+locale.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.textdomain(APP_NAME)
 _ = gettext.gettext
 
 import rabbitvcs.vcs.status
@@ -94,7 +99,12 @@ class GtkBuilderWidgetWrapper(object):
         )
 
         tree = Gtk.Builder()
+        tree.set_translation_domain(APP_NAME)        
         tree.add_from_file(path)
+
+        print("UI FILE : " + path)
+        print("APP_NAME : " + APP_NAME)
+        print("LOCALE_DIR : " + LOCALE_DIR)
 
         if self.claim_domain:
             tree.set_translation_domain(APP_NAME)
@@ -225,15 +235,10 @@ class InterfaceNonView(object):
         self.do_gtk_quit = False
 
     def close(self):
-        if self.do_gtk_quit:
-            if not Gtk.main_level():
-                GLib.idle_add(Gtk.main_quit)
-                self.do_gtk_quit = False
-            else:
-                try:
-                    Gtk.main_quit()
-                except RuntimeError:
-                    raise SystemExit()
+        try:
+            Gtk.main_quit()
+        except RuntimeError:
+            raise SystemExit()
 
     def register_gtk_quit(self):
         self.do_gtk_quit = True

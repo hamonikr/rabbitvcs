@@ -43,7 +43,12 @@ from rabbitvcs.util.log import Log
 
 log = Log("rabbitvcs.ui.editconflicts")
 
-from rabbitvcs import gettext
+import locale
+import gettext
+from rabbitvcs import APP_NAME, LOCALE_DIR
+locale.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.textdomain(APP_NAME)
 _ = gettext.gettext
 
 class SVNEditConflicts(InterfaceNonView):
@@ -130,7 +135,7 @@ class SVNEditConflicts(InterfaceNonView):
                     log.debug("revision: %s"%revision)
                     revisionPaths.append((revision,name))
         if len(revisionPaths) == 2:
-            if int(revisionPaths[0][0]) < int(revisionPaths[1][0]):
+            if revisionPaths[0][0] < revisionPaths[1][0]:
                 ancestorPath = os.path.join(baseDir, revisionPaths[0][1])
                 theirsPath = os.path.join(baseDir, revisionPaths[1][1])
             else:
@@ -172,7 +177,5 @@ if __name__ == "__main__":
     )
 
     window = editconflicts_factory(paths[0])
-
-    # No Gtk event pending.
-    # window.register_gtk_quit()
-    # Gtk.main()
+    window.register_gtk_quit()
+    Gtk.main()

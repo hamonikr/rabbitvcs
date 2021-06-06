@@ -24,7 +24,7 @@ from six.moves import range
 
 import os
 import os.path
-from locale import strxfrm
+from locale import getlocale, LC_MESSAGES, strxfrm
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -40,11 +40,15 @@ except (ImportError, ValueError):
 
 from rabbitvcs.util.decorators import gtk_unsafe
 from rabbitvcs.util import helper
-from rabbitvcs.util._locale import get_locale
 from rabbitvcs.util.strings import S
 import rabbitvcs.vcs
 
-from rabbitvcs import gettext
+import locale
+import gettext
+from rabbitvcs import APP_NAME, LOCALE_DIR
+locale.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.textdomain(APP_NAME)
 _ = gettext.gettext
 
 from rabbitvcs.util.log import Log
@@ -926,7 +930,7 @@ class TextView(object):
             try:
                 checker = GtkSpell.Checker()
                 try:
-                    checker.set_language(get_locale()[0])
+                    checker.set_language(getlocale(LC_MESSAGES)[0])
                 except:
                     checker = None          # Language not available.
                 if checker:

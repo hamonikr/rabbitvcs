@@ -47,7 +47,12 @@ from rabbitvcs.util.strings import S
 import rabbitvcs.util.settings
 import rabbitvcs.vcs
 
-from rabbitvcs import gettext
+import locale
+import gettext
+from rabbitvcs import APP_NAME, LOCALE_DIR
+locale.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.textdomain(APP_NAME)
 _ = gettext.gettext
 
 from six.moves import range
@@ -156,10 +161,6 @@ class Log(InterfaceView):
         self.stop_on_copy = False
         self.revision_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
 
-        style = self.get_widget("revisions_table").get_style_context()
-        textcolor = style.get_color(Gtk.StateFlags.NORMAL)
-        self.orgTextColor = textcolor.to_string()
-
     #
     # UI Signal Callback Methods
     #
@@ -195,7 +196,7 @@ class Log(InterfaceView):
 
     def on_search(self, widget):
         tb = self.get_widget("search_buffer")
-        self.filter_text = tb.get_text(tb.get_start_iter(), tb.get_end_iter(), 0).lower()
+        self.filter_text = tb.get_text(tb.get_start_iter(), tb.get_end_iter()).lower()
 
         self.refresh()
 
@@ -216,13 +217,6 @@ class Log(InterfaceView):
 
         helper.launch_diff_tool(*paths)
 
-    def on_revisions_table_cursor_changed(self, treeview):
-        if len(self.revisions_table.get_selected_rows()) == 0:
-            return
-        self.paths_table.clear()
-        self.message.set_text("")
-        self.update_revision_message()
-
     def on_revisions_table_mouse_event(self, treeview, event, *args):
         if len(self.revisions_table.get_selected_rows()) == 0:
             self.message.set_text("")
@@ -232,7 +226,10 @@ class Log(InterfaceView):
         if event.button == 3 and event.type == Gdk.EventType.BUTTON_RELEASE:
             self.show_revisions_table_popup_menu(treeview, event)
 
-        # Let the rest be handled by the on_revisions_table_cursor changed event
+        self.paths_table.clear()
+        self.message.set_text("")
+
+        self.update_revision_message()
 
 
     #
@@ -304,7 +301,7 @@ class Log(InterfaceView):
             revisions.append(int(self.revisions_table.get_row(row)[self.revision_number_column]))
 
         revisions.sort()
-        return helper.encode_revisions(revisions)
+        helper.encode_revisions(revisions)
 
     def get_selected_revision_number(self):
         if len(self.revisions_table.get_selected_rows()):
@@ -393,8 +390,7 @@ class SVNLog(Log):
                 _("Date"), _("Message"),
                 _("Color")],
             callbacks={
-                "mouse-event":   self.on_revisions_table_mouse_event,
-                "cursor-changed": self.on_revisions_table_cursor_changed
+                "mouse-event":   self.on_revisions_table_mouse_event
             }
         )
 
@@ -495,7 +491,7 @@ class SVNLog(Log):
         for item in self.display_items:
             msg = helper.format_long_text(item.message, cols = 80, line1only = True)
             rev = item.revision
-            color = self.orgTextColor #"#000000"
+            color = "#000000"
             if (self.merge_candidate_revisions != None and
                 int(rev.short()) not in self.merge_candidate_revisions):
                 color = "#c9c9c9"

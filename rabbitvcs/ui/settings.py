@@ -37,19 +37,24 @@ from rabbitvcs.ui import InterfaceView
 import rabbitvcs.ui.widget
 import rabbitvcs.ui.dialog
 import rabbitvcs.util.settings
-from rabbitvcs.util._locale import get_locale
 from rabbitvcs.util.strings import S
 
 import rabbitvcs.services.checkerservice
 from rabbitvcs.services.checkerservice import StatusCheckerStub
 
-from rabbitvcs import gettext, _gettext, APP_NAME, LOCALE_DIR
+import locale
+import gettext
+from rabbitvcs import APP_NAME, LOCALE_DIR
+locale.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.bindtextdomain(APP_NAME, LOCALE_DIR)
+gettext.textdomain(APP_NAME)
 _ = gettext.gettext
 
 CHECKER_UNKNOWN_INFO = _("Unknown")
 CHECKER_SERVICE_ERROR = _(
 "There was an error communicating with the status checker service.")
 
+from locale import getdefaultlocale, getlocale, LC_MESSAGES
 
 class Settings(InterfaceView):
     dtformats = [
@@ -186,7 +191,7 @@ class Settings(InterfaceView):
                                     rabbitvcs.services.checkerservice.SERVICE,
                                     rabbitvcs.services.checkerservice.OBJECT_PATH)
                 # Initialize service locale in case it just started.
-                self.checker_service.SetLocale(*get_locale())
+                self.checker_service.SetLocale(*getlocale(LC_MESSAGES))
             except dbus.DBusException as ex:
                 if report_failure:
                     rabbitvcs.ui.dialog.MessageBox(CHECKER_SERVICE_ERROR)
