@@ -21,7 +21,7 @@ sudo apt update
 sudo apt install -y rabbitvcs-core rabbitvcs-nemo
 ```
 
-## Ubuntu, LinuxMint 등 다른 배포판 사용자의 경우
+## Ubuntu, LinuxMint 등 다른 우분투 계열 배포판 사용자의 경우
 터미널을 열고(Ctrl+Alt+T) 아래 명령어를 입력하세요.
 
 ```
@@ -36,6 +36,31 @@ sudo apt install -y rabbitvcs-core rabbitvcs-nautilus
 # gedit
 sudo apt install -y rabbitvcs-core rabbitvcs-gedit
 
+```
+
+## Manual Install
+Execute the following:
+```
+git clone https://github.com/hamonikr/rabbitvcs-hamonikr.git
+cd rabbitvcs-hamonikr
+
+sudo python setup.py install --record installfiles.txt
+```
+
+### On Ubuntu or Debian-based distros, instead run:
+```
+sudo python setup.py install --install-layout=deb --record installfiles.txt
+
+sudo cp -v clients/nemo/RabbitVCS.py /usr/share/nemo-python/extensions/RabbitVCS.py
+
+sudo chmod +x /usr/share/nemo-python/extensions/RabbitVCS.py
+nemo -q
+```
+
+### uninstall
+```
+sudo xargs rm -rf < installfiles.txt
+sudo rm -f /usr/share/nemo-python/extensions/RabbitVCS.py
 ```
 
 # Usage
