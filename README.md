@@ -18,7 +18,7 @@ RabbitVCS 프로젝트는 사용하는 SVN, GIT, HG 등의 버전 관리 시스�
 
 ```
 sudo apt update
-sudo apt install -y rabbitvcs-core rabbitvcs-nemo
+sudo apt install -y rabbitvcs-nemo
 ```
 
 ## Ubuntu, LinuxMint 등 다른 우분투 계열 배포판 사용자의 경우
@@ -28,13 +28,13 @@ sudo apt install -y rabbitvcs-core rabbitvcs-nemo
 wget -qO- https://pkg.hamonikr.org/add-hamonikr.apt | sudo -E bash -
 
 # nemo 
-sudo apt install -y rabbitvcs-core rabbitvcs-nemo
+sudo apt install -y rabbitvcs-nemo
 
 # nautilus
-sudo apt install -y rabbitvcs-core rabbitvcs-nautilus
+sudo apt install -y rabbitvcs-nautilus
 
 # gedit
-sudo apt install -y rabbitvcs-core rabbitvcs-gedit
+sudo apt install -y rabbitvcs-gedit
 
 ```
 
